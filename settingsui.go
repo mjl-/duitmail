@@ -9,6 +9,7 @@ import (
 
 	"9fans.net/go/draw"
 	"github.com/mjl-/duit"
+	fa "github.com/mjl-/fontawesome5"
 )
 
 type mailboxSettings struct {
@@ -37,7 +38,7 @@ type mailboxSettingsUI struct {
 	*duit.Box
 }
 
-func newMailboxSettingsUI(bold *draw.Font, dui *duit.DUI, mbSet mailboxSettings) *mailboxSettingsUI {
+func newMailboxSettingsUI(bold, awesome *draw.Font, dui *duit.DUI, mbSet mailboxSettings) *mailboxSettingsUI {
 	ui := &mailboxSettingsUI{
 		mailboxSettings: mbSet,
 
@@ -100,6 +101,10 @@ func newMailboxSettingsUI(bold *draw.Font, dui *duit.DUI, mbSet mailboxSettings)
 						},
 						duit.CenterUI(
 							&duit.Button{
+								Icon: duit.Icon{
+									Font: awesome,
+									Rune: fa.Save,
+								},
 								Text:    "save",
 								Primary: true,
 								Click: func(r *duit.Result) {

@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"github.com/mjl-/duit"
+	fa "github.com/mjl-/fontawesome5"
 )
 
 type mailboxUI struct {
@@ -91,6 +92,7 @@ func newMailboxUI(mb mailbox) *mailboxUI {
 					Margin:  image.Pt(4, 2),
 					Kids: duit.NewKids(
 						&duit.Button{
+							Icon: icon(fa.Edit),
 							Text: "new mail",
 							Click: func(r *duit.Result) {
 								go compose(emptyMail(), "")

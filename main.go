@@ -15,10 +15,13 @@ import (
 	"9fans.net/go/draw"
 	"github.com/mjl-/duit"
 	"github.com/mjl-/enmime"
+	fa "github.com/mjl-/fontawesome5"
 )
 
 var (
-	settings mailboxSettings
+	settings        mailboxSettings
+	mainDUI         *duit.DUI
+	mainFontawesome *draw.Font
 )
 
 func check(err error, msg string) {
@@ -30,6 +33,13 @@ func check(err error, msg string) {
 type mailbox struct {
 	Name   string
 	Emails []email
+}
+
+func icon(c rune) duit.Icon {
+	return duit.Icon{
+		Font: mainFontawesome,
+		Rune: c,
+	}
 }
 
 func openSettings() {
@@ -45,7 +55,9 @@ func openSettings() {
 		bold = dui.Env.Display.DefaultFont
 	}
 
-	dui.Top = newMailboxSettingsUI(bold, dui, settings)
+	awesome, _ := dui.Env.Display.OpenFont(os.Getenv("fontawesome"))
+
+	dui.Top = newMailboxSettingsUI(bold, awesome, dui, settings)
 	dui.Render()
 	for {
 		select {
@@ -86,6 +98,12 @@ func main() {
 
 	dui, err := duit.NewDUI("mail", "1200x700")
 	check(err, "new dui")
+
+	mainDUI = dui
+	mainFontawesome, err = dui.Env.Display.OpenFont(os.Getenv("fontawesome"))
+	if err != nil {
+		log.Printf("icons (fontawesome) not available: %s\n", err)
+	}
 
 	// xxx this must be replaced with imap stuff
 	var mailboxes []mailbox
@@ -170,12 +188,17 @@ func main() {
 							Margin:  image.Pt(4, 2),
 							Kids: duit.NewKids(
 								&duit.Button{
+									Icon: icon(fa.Cogs),
 									Text: "settings",
 									Click: func(r *duit.Result) {
 										go openSettings()
 									},
 								},
-								&duit.Button{Text: "fetch", Click: fetchMail},
+								&duit.Button{
+									Icon:  icon(fa.Sync),
+									Text:  "refresh",
+									Click: fetchMail,
+								},
 							),
 						},
 						&duit.Scroll{

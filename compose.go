@@ -6,13 +6,24 @@ import (
 	"image"
 	"log"
 	"net/mail"
+	"os"
 
 	"github.com/mjl-/duit"
+	fa "github.com/mjl-/fontawesome5"
 )
 
 func compose(m email, inReplyTo string) {
 	dui, err := duit.NewDUI("compose", "700x700")
 	check(err, "new ui")
+
+	fontawesome, _ := dui.Env.Display.OpenFont(os.Getenv("fontawesome"))
+
+	icon := func(c rune) duit.Icon {
+		return duit.Icon{
+			Font: fontawesome,
+			Rune: c,
+		}
+	}
 
 	fromUI := &duit.Field{Text: m.AddrListString("From")}
 	replyToUI := &duit.Field{Text: m.AddrListString("Reply-To")}
@@ -39,6 +50,7 @@ func compose(m email, inReplyTo string) {
 				Margin:  image.Pt(4, 2),
 				Kids: duit.NewKids(
 					&duit.Button{
+						Icon:    icon(fa.PaperPlane),
 						Text:    "send",
 						Primary: true,
 						Click: func(r *duit.Result) {
@@ -77,12 +89,14 @@ func compose(m email, inReplyTo string) {
 						},
 					},
 					&duit.Button{
+						Icon: icon(fa.Paperclip),
 						Text: "attach",
 						Click: func(r *duit.Result) {
 							log.Printf("todo: attach file...")
 						},
 					},
 					&duit.Button{
+						Icon: icon(fa.Times),
 						Text: "cancel",
 						Click: func(r *duit.Result) {
 							log.Printf("todo: close window without killing the entire program...")

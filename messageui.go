@@ -11,6 +11,7 @@ import (
 
 	"github.com/mjl-/duit"
 	"github.com/mjl-/enmime"
+	fa "github.com/mjl-/fontawesome5"
 )
 
 type messageUI struct {
@@ -34,6 +35,7 @@ func newMessageUI(mbUI *mailboxUI, m email) *messageUI {
 					duit.NewKids(
 						&duit.Label{Text: size},
 						&duit.Button{
+							Icon: icon(fa.Save),
 							Text: "save",
 							Click: func(r *duit.Result) {
 								path := settings.Downloads + "/" + filename.Text
@@ -84,12 +86,14 @@ func newMessageUI(mbUI *mailboxUI, m email) *messageUI {
 					Margin:  image.Pt(4, 2),
 					Kids: duit.NewKids(
 						&duit.Button{
+							Icon: icon(fa.Archive),
 							Text: "archive",
 							Click: func(r *duit.Result) {
 								log.Printf("todo: archive email...")
 							},
 						},
 						&duit.Button{
+							Icon: icon(fa.Reply),
 							Text: "reply",
 							Click: func(r *duit.Result) {
 								to := m.AddrListString("Reply-To")
@@ -111,6 +115,7 @@ func newMessageUI(mbUI *mailboxUI, m email) *messageUI {
 							},
 						},
 						&duit.Button{
+							Icon: icon(fa.ReplyAll),
 							Text: "reply all",
 							Click: func(r *duit.Result) {
 								to := m.AddrList("Reply-To")
@@ -146,6 +151,7 @@ func newMessageUI(mbUI *mailboxUI, m email) *messageUI {
 							},
 						},
 						&duit.Button{
+							Icon: icon(fa.ArrowRight),
 							Text: "forward",
 							Click: func(r *duit.Result) {
 								header := textproto.MIMEHeader(map[string][]string{
@@ -162,12 +168,14 @@ func newMessageUI(mbUI *mailboxUI, m email) *messageUI {
 							},
 						},
 						&duit.Button{
+							Icon: icon(fa.Trash),
 							Text: "delete",
 							Click: func(r *duit.Result) {
 								log.Printf("todo: delete email...")
 							},
 						},
 						&duit.Button{
+							Icon: icon(fa.Fire),
 							Text: "spam",
 							Click: func(r *duit.Result) {
 								log.Printf("todo: delete & mark as spam...")
