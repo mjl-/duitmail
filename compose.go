@@ -43,6 +43,8 @@ func compose(m email, inReplyTo string) {
 	edit := duit.NewEdit(bytes.NewReader([]byte(text)))
 	edit.SetCursor(cursor, -1)
 
+	stop := make(chan struct{})
+
 	dui.Top = &duit.Box{
 		Kids: duit.NewKids(
 			&duit.Box{
@@ -99,7 +101,7 @@ func compose(m email, inReplyTo string) {
 						Icon: icon(fa.Times),
 						Text: "cancel",
 						Click: func(r *duit.Result) {
-							log.Printf("todo: close window without killing the entire program...")
+							close(stop)
 						},
 					},
 				),
@@ -132,6 +134,13 @@ func compose(m email, inReplyTo string) {
 		select {
 		case e := <-dui.Events:
 			dui.Event(e)
+
+		case <-dui.Done:
+			return
+
+		case <-stop:
+			dui.Close()
+			return
 		}
 	}
 }

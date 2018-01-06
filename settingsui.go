@@ -38,7 +38,7 @@ type mailboxSettingsUI struct {
 	*duit.Box
 }
 
-func newMailboxSettingsUI(bold, awesome *draw.Font, dui *duit.DUI, mbSet mailboxSettings) *mailboxSettingsUI {
+func newMailboxSettingsUI(bold, awesome *draw.Font, stop chan struct{}, dui *duit.DUI, mbSet mailboxSettings) *mailboxSettingsUI {
 	ui := &mailboxSettingsUI{
 		mailboxSettings: mbSet,
 
@@ -111,7 +111,7 @@ func newMailboxSettingsUI(bold, awesome *draw.Font, dui *duit.DUI, mbSet mailbox
 								Colorset: &dui.Primary,
 								Click: func(r *duit.Result) {
 									ui.saveSettings()
-									// xxx gracefully shut down this window
+									close(stop)
 								},
 							},
 						),

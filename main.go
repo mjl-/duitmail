@@ -57,16 +57,20 @@ func openSettings() {
 
 	awesome, _ := dui.Display.OpenFont(os.Getenv("fontawesome"))
 
-	dui.Top = newMailboxSettingsUI(bold, awesome, dui, settings)
+	stop := make(chan struct{})
+	dui.Top = newMailboxSettingsUI(bold, awesome, stop, dui, settings)
 	dui.Render()
 	for {
 		select {
 		case e := <-dui.Events:
 			dui.Event(e)
-			/*
-				case <-dui.Stop:
-					break
-			*/
+
+		case <-dui.Done:
+			return
+
+		case <-stop:
+			dui.Close()
+			return
 		}
 	}
 }
