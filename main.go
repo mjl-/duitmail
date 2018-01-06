@@ -49,13 +49,13 @@ func openSettings() {
 	// xxx find better way of dealing with fonts in a dui...
 	var bold *draw.Font
 	if os.Getenv("boldfont") != "" {
-		bold, _ = dui.Env.Display.OpenFont(os.Getenv("boldfont"))
+		bold, _ = dui.Display.OpenFont(os.Getenv("boldfont"))
 	}
 	if bold == nil {
-		bold = dui.Env.Display.DefaultFont
+		bold = dui.Display.DefaultFont
 	}
 
-	awesome, _ := dui.Env.Display.OpenFont(os.Getenv("fontawesome"))
+	awesome, _ := dui.Display.OpenFont(os.Getenv("fontawesome"))
 
 	dui.Top = newMailboxSettingsUI(bold, awesome, dui, settings)
 	dui.Render()
@@ -100,7 +100,7 @@ func main() {
 	check(err, "new dui")
 
 	mainDUI = dui
-	mainFontawesome, err = dui.Env.Display.OpenFont(os.Getenv("fontawesome"))
+	mainFontawesome, err = dui.Display.OpenFont(os.Getenv("fontawesome"))
 	if err != nil {
 		log.Printf("icons (fontawesome) not available: %s\n", err)
 	}
@@ -178,7 +178,7 @@ func main() {
 		Kids: duit.NewKids(
 			&duit.Horizontal{
 				Split: func(width int) []int {
-					col1 := dui.Env.Scale(150)
+					col1 := dui.Scale(150)
 					return []int{col1, width - col1}
 				},
 				Kids: duit.NewKids(

@@ -16,7 +16,7 @@ func compose(m email, inReplyTo string) {
 	dui, err := duit.NewDUI("compose", "700x700")
 	check(err, "new ui")
 
-	fontawesome, _ := dui.Env.Display.OpenFont(os.Getenv("fontawesome"))
+	fontawesome, _ := dui.Display.OpenFont(os.Getenv("fontawesome"))
 
 	icon := func(c rune) duit.Icon {
 		return duit.Icon{
