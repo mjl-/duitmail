@@ -83,6 +83,7 @@ func newMailboxSettingsUI(bold, awesome *draw.Font, dui *duit.DUI, mbSet mailbox
 	ui.Box = &duit.Box{
 		Kids: duit.NewKids(
 			duit.CenterUI(
+				duit.SpaceXY(10, 10),
 				&duit.Box{
 					Kids: duit.NewKids(
 						&duit.Tabs{
@@ -100,6 +101,7 @@ func newMailboxSettingsUI(bold, awesome *draw.Font, dui *duit.DUI, mbSet mailbox
 							},
 						},
 						duit.CenterUI(
+							duit.SpaceXY(10, 10),
 							&duit.Button{
 								Icon: duit.Icon{
 									Font: awesome,
@@ -112,11 +114,9 @@ func newMailboxSettingsUI(bold, awesome *draw.Font, dui *duit.DUI, mbSet mailbox
 									// xxx gracefully shut down this window
 								},
 							},
-							duit.SpaceXY(10, 10),
 						),
 					),
 				},
-				duit.SpaceXY(10, 10),
 			),
 		),
 	}
