@@ -107,8 +107,8 @@ func newMailboxSettingsUI(bold, awesome *draw.Font, dui *duit.DUI, mbSet mailbox
 									Font: awesome,
 									Rune: fa.Save,
 								},
-								Text:    "save",
-								Primary: true,
+								Text:     "save",
+								Colorset: &dui.Primary,
 								Click: func(r *duit.Result) {
 									ui.saveSettings()
 									// xxx gracefully shut down this window

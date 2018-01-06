@@ -50,9 +50,9 @@ func compose(m email, inReplyTo string) {
 				Margin:  image.Pt(4, 2),
 				Kids: duit.NewKids(
 					&duit.Button{
-						Icon:    icon(fa.PaperPlane),
-						Text:    "send",
-						Primary: true,
+						Icon:     icon(fa.PaperPlane),
+						Text:     "send",
+						Colorset: &dui.Primary,
 						Click: func(r *duit.Result) {
 							var err error
 							parseAddressList := func(what, s string) []*mail.Address {
