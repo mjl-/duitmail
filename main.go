@@ -58,12 +58,12 @@ func openSettings() {
 	awesome, _ := dui.Display.OpenFont(os.Getenv("fontawesome"))
 
 	stop := make(chan struct{})
-	dui.Top = newMailboxSettingsUI(bold, awesome, stop, dui, settings)
+	dui.Top.UI = newMailboxSettingsUI(bold, awesome, stop, dui, settings)
 	dui.Render()
 	for {
 		select {
-		case e := <-dui.Events:
-			dui.Event(e)
+		case e := <-dui.Inputs:
+			dui.Input(e)
 
 		case <-dui.Done:
 			return
@@ -75,7 +75,7 @@ func openSettings() {
 	}
 }
 
-func fetchMail(r *duit.Result) {
+func fetchMail(r *duit.Event) {
 	log.Printf("fetchMail, not yet")
 }
 
@@ -166,7 +166,8 @@ func main() {
 	var mailboxList *duit.List
 	mailboxList = &duit.List{
 		Values: mailboxValues,
-		Changed: func(index int, r *duit.Result) {
+		Changed: func(index int, r *duit.Event) {
+			defer dui.MarkLayout(mailboxBox)
 			lv := mailboxList.Values[index]
 			var nui duit.UI = noMailboxUI
 			if lv.Selected {
@@ -174,11 +175,10 @@ func main() {
 				nui = lv.Value.(*mailboxUI)
 			}
 			mailboxBox.Kids = duit.NewKids(nui)
-			r.Layout = true
 		},
 	}
 
-	dui.Top = &duit.Box{
+	dui.Top.UI = &duit.Box{
 		Kids: duit.NewKids(
 			&duit.Horizontal{
 				Split: func(width int) []int {
@@ -194,7 +194,7 @@ func main() {
 								&duit.Button{
 									Icon: icon(fa.Cogs),
 									Text: "settings",
-									Click: func(r *duit.Result) {
+									Click: func(r *duit.Event) {
 										go openSettings()
 									},
 								},
@@ -205,9 +205,7 @@ func main() {
 								},
 							),
 						},
-						&duit.Scroll{
-							Child: mailboxList,
-						},
+						duit.NewScroll(mailboxList),
 					),
 					mailboxBox,
 				),
@@ -218,8 +216,11 @@ func main() {
 
 	for {
 		select {
-		case e := <-dui.Events:
-			dui.Event(e)
+		case e := <-dui.Inputs:
+			dui.Input(e)
+
+		case <-dui.Done:
+			return
 		}
 	}
 }

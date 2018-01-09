@@ -45,7 +45,7 @@ func compose(m email, inReplyTo string) {
 
 	stop := make(chan struct{})
 
-	dui.Top = &duit.Box{
+	dui.Top.UI = &duit.Box{
 		Kids: duit.NewKids(
 			&duit.Box{
 				Padding: duit.SpaceXY(4, 4),
@@ -55,7 +55,7 @@ func compose(m email, inReplyTo string) {
 						Icon:     icon(fa.PaperPlane),
 						Text:     "send",
 						Colorset: &dui.Primary,
-						Click: func(r *duit.Result) {
+						Click: func(r *duit.Event) {
 							var err error
 							parseAddressList := func(what, s string) []*mail.Address {
 								if s == "" {
@@ -93,14 +93,14 @@ func compose(m email, inReplyTo string) {
 					&duit.Button{
 						Icon: icon(fa.Paperclip),
 						Text: "attach",
-						Click: func(r *duit.Result) {
+						Click: func(r *duit.Event) {
 							log.Printf("todo: attach file...")
 						},
 					},
 					&duit.Button{
 						Icon: icon(fa.Times),
 						Text: "cancel",
-						Click: func(r *duit.Result) {
+						Click: func(r *duit.Event) {
 							close(stop)
 						},
 					},
@@ -132,8 +132,8 @@ func compose(m email, inReplyTo string) {
 
 	for {
 		select {
-		case e := <-dui.Events:
-			dui.Event(e)
+		case e := <-dui.Inputs:
+			dui.Input(e)
 
 		case <-dui.Done:
 			return

@@ -67,7 +67,8 @@ func newMailboxUI(mb mailbox) *mailboxUI {
 		},
 		Rows:    messageRows,
 		Padding: duit.SpaceXY(4, 2),
-		Changed: func(index int, r *duit.Result) {
+		Changed: func(index int, r *duit.Event) {
+			defer mainDUI.MarkLayout(messageBox)
 			row := messageList.Rows[index]
 			var nui duit.UI = noMessageUI
 			if row.Selected {
@@ -78,7 +79,6 @@ func newMailboxUI(mb mailbox) *mailboxUI {
 				}
 			}
 			messageBox.Kids = duit.NewKids(nui)
-			r.Layout = true
 		},
 	}
 	mbUI.Horizontal = &duit.Horizontal{
@@ -94,7 +94,7 @@ func newMailboxUI(mb mailbox) *mailboxUI {
 						&duit.Button{
 							Icon: icon(fa.Edit),
 							Text: "new mail",
-							Click: func(r *duit.Result) {
+							Click: func(r *duit.Event) {
 								go compose(emptyMail(), "")
 							},
 						},
@@ -103,9 +103,7 @@ func newMailboxUI(mb mailbox) *mailboxUI {
 						},
 					),
 				},
-				&duit.Scroll{
-					Child: messageList,
-				},
+				duit.NewScroll(messageList),
 			),
 			messageBox,
 		),
