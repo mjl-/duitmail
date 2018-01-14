@@ -10,7 +10,7 @@ import (
 
 type mailboxUI struct {
 	Mailbox mailbox
-	*duit.Horizontal
+	duit.Box
 }
 
 type date struct {
@@ -47,7 +47,7 @@ func newMailboxUI(mb mailbox) *mailboxUI {
 		Mailbox: mb,
 	}
 
-	noMessageUI := duit.NewMiddle(&duit.Label{Text: "select a message on the left"})
+	noMessageUI := duit.NewMiddle(duit.SpaceXY(10, 10), &duit.Label{Text: "select a message on the left"})
 
 	messageBox := &duit.Box{
 		Width:  -1,
@@ -81,32 +81,38 @@ func newMailboxUI(mb mailbox) *mailboxUI {
 			messageBox.Kids = duit.NewKids(nui)
 		},
 	}
-	mbUI.Horizontal = &duit.Horizontal{
-		Split: func(width int) []int {
-			return []int{width / 2, width - width/2}
-		},
+	mbUI.Box = duit.Box{
 		Kids: duit.NewKids(
-			duit.NewBox(
-				&duit.Box{
-					Padding: duit.SpaceXY(duit.ScrollbarSize, 4),
-					Margin:  image.Pt(4, 2),
-					Kids: duit.NewKids(
-						&duit.Button{
-							Icon: icon(fa.Edit),
-							Text: "new mail",
-							Click: func(r *duit.Event) {
-								go compose(emptyMail(), "")
-							},
-						},
-						&duit.Label{
-							Text: "mailbox connection status...",
-						},
-					),
+			&duit.Split{
+				Gutter: 1,
+				Split: func(width int) []int {
+					return []int{width / 2, width - width/2}
 				},
-				duit.NewScroll(messageList),
-			),
-			messageBox,
+				Kids: duit.NewKids(
+					duit.NewBox(
+						&duit.Box{
+							Padding: duit.SpaceXY(duit.ScrollbarSize, 4),
+							Margin:  image.Pt(4, 2),
+							Kids: duit.NewKids(
+								&duit.Button{
+									Icon: icon(fa.Edit),
+									Text: "new mail",
+									Click: func(r *duit.Event) {
+										go compose(emptyMail(), "")
+									},
+								},
+								&duit.Label{
+									Text: "mailbox connection status...",
+								},
+							),
+						},
+						duit.NewScroll(messageList),
+					),
+					messageBox,
+				),
+			},
 		),
 	}
+	mbUI.Box.Kids[0].ID = "messages"
 	return mbUI
 }
