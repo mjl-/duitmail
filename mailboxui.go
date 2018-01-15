@@ -58,7 +58,7 @@ func newMailboxUI(mb mailbox) *mailboxUI {
 	var messageList *duit.Gridlist
 	messageList = &duit.Gridlist{
 		Striped: true,
-		Header: duit.Gridrow{
+		Header: &duit.Gridrow{
 			Values: []string{
 				"date",
 				"from",
@@ -67,7 +67,7 @@ func newMailboxUI(mb mailbox) *mailboxUI {
 		},
 		Rows:    messageRows,
 		Padding: duit.SpaceXY(4, 2),
-		Changed: func(index int, r *duit.Event) {
+		Changed: func(index int) (e duit.Event) {
 			defer mainDUI.MarkLayout(messageBox)
 			row := messageList.Rows[index]
 			var nui duit.UI = noMessageUI
@@ -79,6 +79,7 @@ func newMailboxUI(mb mailbox) *mailboxUI {
 				}
 			}
 			messageBox.Kids = duit.NewKids(nui)
+			return
 		},
 	}
 	mbUI.Box = duit.Box{
@@ -97,8 +98,9 @@ func newMailboxUI(mb mailbox) *mailboxUI {
 								&duit.Button{
 									Icon: icon(fa.Edit),
 									Text: "new mail",
-									Click: func(r *duit.Event) {
+									Click: func() (e duit.Event) {
 										go compose(emptyMail(), "")
+										return
 									},
 								},
 								&duit.Label{

@@ -37,7 +37,7 @@ func newMessageUI(mbUI *mailboxUI, m email) *messageUI {
 						&duit.Button{
 							Icon: icon(fa.Save),
 							Text: "save",
-							Click: func(r *duit.Event) {
+							Click: func() (e duit.Event) {
 								path := settings.Downloads + "/" + filename.Text
 								f, err := os.Create(path)
 								check(err, "creating file")
@@ -46,7 +46,8 @@ func newMessageUI(mbUI *mailboxUI, m email) *messageUI {
 								err = f.Close()
 								check(err, "closing download")
 								kids[i*3+1].UI = &duit.Label{Text: ""}
-								r.NeedLayout = true
+								e.NeedLayout = true
+								return
 							},
 						},
 						filename,
@@ -88,14 +89,15 @@ func newMessageUI(mbUI *mailboxUI, m email) *messageUI {
 						&duit.Button{
 							Icon: icon(fa.Archive),
 							Text: "archive",
-							Click: func(r *duit.Event) {
+							Click: func() (e duit.Event) {
 								log.Printf("todo: archive email...")
+								return
 							},
 						},
 						&duit.Button{
 							Icon: icon(fa.Reply),
 							Text: "reply",
-							Click: func(r *duit.Event) {
+							Click: func() (e duit.Event) {
 								to := m.AddrListString("Reply-To")
 								if to == "" {
 									to = m.AddrListString("From")
@@ -112,12 +114,13 @@ func newMessageUI(mbUI *mailboxUI, m email) *messageUI {
 									},
 								}
 								go compose(newMail, m.Header("Message-ID"))
+								return
 							},
 						},
 						&duit.Button{
 							Icon: icon(fa.ReplyAll),
 							Text: "reply all",
-							Click: func(r *duit.Event) {
+							Click: func() (e duit.Event) {
 								to := m.AddrList("Reply-To")
 								if len(to) == 0 {
 									to = m.AddrList("From")
@@ -148,12 +151,13 @@ func newMessageUI(mbUI *mailboxUI, m email) *messageUI {
 									},
 								}
 								go compose(newMail, m.Header("Message-ID"))
+								return
 							},
 						},
 						&duit.Button{
 							Icon: icon(fa.ArrowRight),
 							Text: "forward",
-							Click: func(r *duit.Event) {
+							Click: func() (e duit.Event) {
 								header := textproto.MIMEHeader(map[string][]string{
 									"From":    {settings.Address},
 									"Subject": {"fwd: " + m.Header("Subject")},
@@ -165,20 +169,23 @@ func newMessageUI(mbUI *mailboxUI, m email) *messageUI {
 									},
 								}
 								go compose(newMail, m.Header("Message-ID"))
+								return
 							},
 						},
 						&duit.Button{
 							Icon: icon(fa.Trash),
 							Text: "delete",
-							Click: func(r *duit.Event) {
+							Click: func() (e duit.Event) {
 								log.Printf("todo: delete email...")
+								return
 							},
 						},
 						&duit.Button{
 							Icon: icon(fa.Fire),
 							Text: "spam",
-							Click: func(r *duit.Event) {
+							Click: func() (e duit.Event) {
 								log.Printf("todo: delete & mark as spam...")
+								return
 							},
 						},
 					),

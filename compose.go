@@ -55,7 +55,7 @@ func compose(m email, inReplyTo string) {
 						Icon:     icon(fa.PaperPlane),
 						Text:     "send",
 						Colorset: &dui.Primary,
-						Click: func(r *duit.Event) {
+						Click: func() (e duit.Event) {
 							var err error
 							parseAddressList := func(what, s string) []*mail.Address {
 								if s == "" {
@@ -88,20 +88,23 @@ func compose(m email, inReplyTo string) {
 									// xxx copy to "sent" mailbox?
 								}
 							}()
+							return
 						},
 					},
 					&duit.Button{
 						Icon: icon(fa.Paperclip),
 						Text: "attach",
-						Click: func(r *duit.Event) {
+						Click: func() (e duit.Event) {
 							log.Printf("todo: attach file...")
+							return
 						},
 					},
 					&duit.Button{
 						Icon: icon(fa.Times),
 						Text: "cancel",
-						Click: func(r *duit.Event) {
+						Click: func() (e duit.Event) {
 							close(stop)
+							return
 						},
 					},
 				),

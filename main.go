@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bytes"
 	"encoding/json"
 	"flag"
 	"fmt"
@@ -11,13 +12,12 @@ import (
 	"os"
 	"sort"
 	"strings"
-	"bytes"
 
-	"github.com/mxk/go-imap/imap"
 	"9fans.net/go/draw"
 	"github.com/mjl-/duit"
 	"github.com/mjl-/enmime"
 	fa "github.com/mjl-/fontawesome5"
+	"github.com/mxk/go-imap/imap"
 )
 
 var (
@@ -77,8 +77,9 @@ func openSettings() {
 	}
 }
 
-func fetchMail(r *duit.Event) {
+func fetchMail() (e duit.Event) {
 	log.Printf("fetchMail, not yet")
+	return
 }
 
 func main() {
@@ -168,7 +169,7 @@ func main() {
 	var mailboxList *duit.List
 	mailboxList = &duit.List{
 		Values: mailboxValues,
-		Changed: func(index int, r *duit.Event) {
+		Changed: func(index int) (e duit.Event) {
 			defer dui.MarkLayout(nil) // xxx more specific?
 			lv := mailboxList.Values[index]
 			var nui duit.UI = noMailboxUI
@@ -177,6 +178,7 @@ func main() {
 				nui = lv.Value.(*mailboxUI)
 			}
 			mailboxBox.Kids = duit.NewKids(nui)
+			return
 		},
 	}
 
@@ -200,8 +202,9 @@ func main() {
 							&duit.Button{
 								Icon: icon(fa.Cogs),
 								Text: "settings",
-								Click: func(r *duit.Event) {
+								Click: func() (e duit.Event) {
 									go openSettings()
+									return
 								},
 							},
 							&duit.Button{
@@ -316,9 +319,9 @@ func main() {
 			}
 
 			values := make([]*duit.ListValue, len(mailboxNames))
-			for i,name := range mailboxNames {
-				values[i] =  &duit.ListValue{
-					Text: name,
+			for i, name := range mailboxNames {
+				values[i] = &duit.ListValue{
+					Text:     name,
 					Selected: false, // xxx
 				}
 			}

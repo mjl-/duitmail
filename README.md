@@ -10,9 +10,8 @@ this is work in progress.
 
 # todo
 
-- dynamically fetch emails using imap
+- dynamically fetch emails using imap, with local cache of emails
 - better error handling (don't quit on error)
 - properly content-transfer-encode outgoing messages
 - send emails with attachments
 - add support for multiple accounts
-- local cache of emails?

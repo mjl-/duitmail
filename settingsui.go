@@ -109,9 +109,10 @@ func newMailboxSettingsUI(bold, awesome *draw.Font, stop chan struct{}, dui *dui
 								},
 								Text:     "save",
 								Colorset: &dui.Primary,
-								Click: func(r *duit.Event) {
+								Click: func() (e duit.Event) {
 									ui.saveSettings()
 									close(stop)
+									return
 								},
 							},
 						),
