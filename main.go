@@ -45,7 +45,7 @@ func icon(c rune) duit.Icon {
 }
 
 func openSettings() {
-	dui, err := duit.NewDUI("mail settings", "600x500")
+	dui, err := duit.NewDUI("mail-settings", nil)
 	check(err, "new dui")
 
 	// xxx find better way of dealing with fonts in a dui...
@@ -103,7 +103,7 @@ func main() {
 		check(err, "parsing config file")
 	}
 
-	dui, err := duit.NewDUI("mail", "1200x700")
+	dui, err := duit.NewDUI("mail", nil)
 	check(err, "new dui")
 
 	mainDUI = dui

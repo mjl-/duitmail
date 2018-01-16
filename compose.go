@@ -13,7 +13,7 @@ import (
 )
 
 func compose(m email, inReplyTo string) {
-	dui, err := duit.NewDUI("compose", "700x700")
+	dui, err := duit.NewDUI("mail-compose", nil)
 	check(err, "new ui")
 
 	fontawesome, _ := dui.Display.OpenFont(os.Getenv("fontawesome"))
