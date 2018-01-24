@@ -41,7 +41,7 @@ func compose(m email, inReplyTo string) {
 		text += "\n--\n" + settings.Signature
 	}
 	edit := duit.NewEdit(bytes.NewReader([]byte(text)))
-	edit.SetCursor(cursor, -1)
+	edit.SetCursor(duit.Cursor{cursor, -1})
 
 	stop := make(chan struct{})
 
