@@ -85,7 +85,8 @@ func newMailboxUI(mb mailbox) *mailboxUI {
 	mbUI.Box = duit.Box{
 		Kids: duit.NewKids(
 			&duit.Split{
-				Gutter: 1,
+				Gutter:     1,
+				Background: mainDUI.Gutter,
 				Split: func(width int) []int {
 					return []int{width / 2, width - width/2}
 				},

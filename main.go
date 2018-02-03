@@ -187,7 +187,8 @@ func main() {
 	dui.Top = duit.Kid{
 		ID: "mailboxes",
 		UI: &duit.Split{
-			Gutter: 1,
+			Gutter:     1,
+			Background: dui.Gutter,
 			Split: func(width int) []int {
 				col1 := dui.Scale(150)
 				return []int{col1, width - col1}
