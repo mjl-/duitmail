@@ -20,8 +20,11 @@ type messageUI struct {
 	*duit.Box
 }
 
-func newMessageUI(mbUI *mailboxUI, m email) *messageUI {
-	edit := duit.NewEdit(bytes.NewReader([]byte(m.Envelope.Text)))
+func newMessageUI(mbUI *mailboxUI, m email) (*messageUI, error) {
+	edit, err := duit.NewEdit(bytes.NewReader([]byte(m.Envelope.Text)))
+	if err != nil {
+		return nil, err
+	}
 
 	// xxx pretty horrible, we cannot determine size before hand, and we only get an utf8reader from enmime
 	var attachments duit.UI = &duit.Box{}
@@ -65,18 +68,24 @@ func newMessageUI(mbUI *mailboxUI, m email) *messageUI {
 	}
 
 	mailQuote := func() string {
-		t := edit.Selection()
-		if t == "" {
-			t = edit.Text()
+		t, err := edit.Selection()
+		if err != nil {
+			log.Printf("quote: selection: %s\n", err)
 		}
-		t = quote(t)
-		if t != "" {
-			return t + "\n"
+		if len(t) == 0 {
+			t, err = edit.Text()
+			if err != nil {
+				log.Printf("quote: text: %s\n", err)
+			}
 		}
-		return t
+		tt := quote(string(t))
+		if len(tt) != 0 {
+			return tt + "\n"
+		}
+		return tt
 	}
 
-	return &messageUI{
+	ui := &messageUI{
 		MailboxUI: mbUI,
 		Email:     m,
 		Box: &duit.Box{
@@ -216,4 +225,5 @@ func newMessageUI(mbUI *mailboxUI, m email) *messageUI {
 			),
 		},
 	}
+	return ui, nil
 }

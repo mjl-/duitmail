@@ -40,7 +40,8 @@ func compose(m email, inReplyTo string) {
 		}
 		text += "\n--\n" + settings.Signature
 	}
-	edit := duit.NewEdit(bytes.NewReader([]byte(text)))
+	edit, err := duit.NewEdit(bytes.NewReader([]byte(text)))
+	check(err, "new edit")
 	edit.SetCursor(duit.Cursor{Cur: cursor, Start: -1})
 
 	stop := make(chan struct{})
@@ -77,10 +78,14 @@ func compose(m email, inReplyTo string) {
 								return
 							}
 							subject := subjectUI.Text
-							body := edit.Text()
+							body, err := edit.Text()
+							if err != nil {
+								log.Printf("text: %s\n", err)
+								return
+							}
 							log.Printf("sending email...\n")
 							go func() {
-								err = sendmail(settings.SMTP, from, replyTo, to, cc, bcc, inReplyTo, subject, body)
+								err = sendmail(settings.SMTP, from, replyTo, to, cc, bcc, inReplyTo, subject, string(body))
 								if err != nil {
 									log.Printf("sendmail: %s\n", err)
 								} else {
@@ -138,8 +143,11 @@ func compose(m email, inReplyTo string) {
 		case e := <-dui.Inputs:
 			dui.Input(e)
 
-		case <-dui.Done:
-			return
+		case err := <-dui.Error:
+			if err == nil {
+				return
+			}
+			log.Printf("dui: %s\n", err)
 
 		case <-stop:
 			dui.Close()

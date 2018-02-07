@@ -39,13 +39,16 @@ type mailboxSettingsUI struct {
 }
 
 func newMailboxSettingsUI(bold, awesome *draw.Font, stop chan struct{}, dui *duit.DUI, mbSet mailboxSettings) *mailboxSettingsUI {
+	sigEdit, err := duit.NewEdit(bytes.NewReader([]byte(mbSet.Signature)))
+	check(err, "new edit for signature")
+
 	ui := &mailboxSettingsUI{
 		mailboxSettings: mbSet,
 
 		name:      &duit.Field{Text: mbSet.Name},
 		address:   &duit.Field{Text: mbSet.Address, Placeholder: "firstname lastname <name@examle.org>"},
 		downloads: &duit.Field{Text: mbSet.Downloads},
-		signature: duit.NewEdit(bytes.NewReader([]byte(mbSet.Signature))),
+		signature: sigEdit,
 
 		imapServerUI: newServerUI(bold, "IMAP", mbSet.IMAP),
 		smtpServerUI: newServerUI(bold, "SMTP", mbSet.SMTP),
@@ -126,11 +129,13 @@ func newMailboxSettingsUI(bold, awesome *draw.Font, stop chan struct{}, dui *dui
 }
 
 func (ui *mailboxSettingsUI) saveSettings() {
+	sig, err := ui.signature.Text()
+	check(err, "signature text")
 	settings := mailboxSettings{
 		Name:      ui.name.Text,
 		Address:   ui.address.Text,
 		Downloads: ui.downloads.Text,
-		Signature: ui.signature.Text(),
+		Signature: string(sig),
 		IMAP:      ui.imapServerUI.Server(),
 		SMTP:      ui.smtpServerUI.Server(),
 	}

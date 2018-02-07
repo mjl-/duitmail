@@ -2,6 +2,7 @@ package main
 
 import (
 	"image"
+	"log"
 	"time"
 
 	"github.com/mjl-/duit"
@@ -73,7 +74,12 @@ func newMailboxUI(mb mailbox) *mailboxUI {
 			var nui duit.UI = noMessageUI
 			if row.Selected {
 				if row.Value == nil {
-					nui = newMessageUI(mbUI, mb.Emails[index])
+					var err error
+					nui, err = newMessageUI(mbUI, mb.Emails[index])
+					if err != nil {
+						log.Printf("newMessageUI: %s\n", err)
+						return
+					}
 				} else {
 					nui = row.Value.(*messageUI)
 				}

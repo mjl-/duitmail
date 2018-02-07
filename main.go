@@ -46,7 +46,10 @@ func icon(c rune) duit.Icon {
 
 func openSettings() {
 	dui, err := duit.NewDUI("mail-settings", nil)
-	check(err, "new dui")
+	if err != nil {
+		log.Printf("new dui: %s\n", err)
+		return
+	}
 
 	// xxx find better way of dealing with fonts in a dui...
 	var bold *draw.Font
@@ -67,8 +70,11 @@ func openSettings() {
 		case e := <-dui.Inputs:
 			dui.Input(e)
 
-		case <-dui.Done:
-			return
+		case err := <-dui.Error:
+			if err == nil {
+				return
+			}
+			log.Printf("dui: %s\n", err)
 
 		case <-stop:
 			dui.Close()
@@ -340,8 +346,11 @@ func main() {
 		case e := <-dui.Inputs:
 			dui.Input(e)
 
-		case <-dui.Done:
-			return
+		case err := <-dui.Error:
+			if err == nil {
+				return
+			}
+			log.Printf("dui: %s\n", err)
 		}
 	}
 }
