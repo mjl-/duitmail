@@ -1,3 +1,4 @@
+// Simple secure mail client, created with duit.
 package main
 
 import (
@@ -53,8 +54,8 @@ func openSettings() {
 
 	// xxx find better way of dealing with fonts in a dui...
 	var bold *draw.Font
-	if os.Getenv("boldfont") != "" {
-		bold, _ = dui.Display.OpenFont(os.Getenv("boldfont"))
+	if os.Getenv("fontbold") != "" {
+		bold, _ = dui.Display.OpenFont(os.Getenv("fontbold"))
 	}
 	if bold == nil {
 		bold = dui.Display.DefaultFont
