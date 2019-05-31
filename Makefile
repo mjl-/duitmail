@@ -1,3 +1,7 @@
+export CGO_ENABLED=0
+export GOPROXY=off
+export GOFLAGS=-mod=vendor
+
 build:
 	go build
 	go vet
@@ -10,4 +14,4 @@ clean:
 	go clean
 
 fmt:
-	gofmt -w *.go
+	go fmt ./...

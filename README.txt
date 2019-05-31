@@ -1,7 +1,9 @@
 duitmail - simple, secure mail client
 
 this is work in progress.
-this doesn't actually work yet, actually reading email isn't implemented other than reading mail files at local/mailboxes/*/*. copy some of your mail files there before starting.
+this doesn't actually work yet, actually reading email isn't implemented other
+than reading mail files at local/mailboxes/*/*. copy some of your mail files
+there before starting.
 
 # instructions
 
