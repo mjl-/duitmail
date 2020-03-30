@@ -23,13 +23,13 @@ golang.org/x/net/html/atom
 # golang.org/x/text v0.3.2
 golang.org/x/text/encoding
 golang.org/x/text/encoding/charmap
+golang.org/x/text/encoding/internal
+golang.org/x/text/encoding/internal/identifier
 golang.org/x/text/encoding/japanese
 golang.org/x/text/encoding/korean
 golang.org/x/text/encoding/simplifiedchinese
 golang.org/x/text/encoding/traditionalchinese
 golang.org/x/text/encoding/unicode
-golang.org/x/text/transform
-golang.org/x/text/encoding/internal/identifier
-golang.org/x/text/encoding/internal
 golang.org/x/text/internal/utf8internal
 golang.org/x/text/runes
+golang.org/x/text/transform
